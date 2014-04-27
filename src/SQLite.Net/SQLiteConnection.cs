@@ -291,14 +291,25 @@ namespace SQLite.Net
                 map = GetMapping(ty, createFlags);
                 _tables.Add(ty.FullName, map);
             }
-            string query = "create table if not exists \"" + map.TableName + "\"(\n";
 
-            IEnumerable<string> decls = map.Columns.Select(p => Orm.SqlDecl(p, StoreDateTimeAsTicks));
-            string decl = string.Join(",\n", decls.ToArray());
-            query += decl;
-            query += ")";
+            var sbQuery = new StringBuilder("create table if not exists \"").Append(map.TableName).Append("\"( \n");
+            map.Columns.Aggregate(sbQuery, (sb, column) => sb.Append(Orm.SqlDecl(column, StoreDateTimeAsTicks)).Append(",\n"));
 
-            int count = Execute(query);
+            var pks = (from c in map.Columns where c.IsPK select c).ToList();
+            if (pks.Count != 0)
+            {
+                //, PRIMARY KEY (A_ID, B_ID)
+                sbQuery.Append("primary key (");
+                pks.Aggregate(sbQuery, (sb, c) => sb.Append(c.Name).Append(','));
+                sbQuery.Remove(sbQuery.Length - 1, 1).Append(')');
+            }
+            else
+            {
+                sbQuery.Remove(sbQuery.Length - 2, 2);
+            }
+
+            sbQuery.Append(")");
+            var count = Execute(sbQuery.ToString());
 
             if (count == 0)
             {
@@ -438,10 +449,12 @@ namespace SQLite.Net
                 }
             }
 
-            foreach (TableMapping.Column p in toBeAdded)
+            foreach (var p in toBeAdded)
             {
-                string addCol = "alter table \"" + map.TableName + "\" add column " +
-                                Orm.SqlDecl(p, StoreDateTimeAsTicks);
+                if (p.IsPK)
+                    throw new Exception("New columns can not be primary keys (unsupported migration)");
+
+                var addCol = "alter table \"" + map.TableName + "\" add column " + Orm.SqlDecl(p, StoreDateTimeAsTicks);
                 Execute(addCol);
             }
         }

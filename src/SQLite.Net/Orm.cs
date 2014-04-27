@@ -37,26 +37,13 @@ namespace SQLite.Net
 
         public static string SqlDecl(TableMapping.Column p, bool storeDateTimeAsTicks)
         {
-            string decl = "\"" + p.Name + "\" " + SqlType(p, storeDateTimeAsTicks) + " ";
-
-            if (p.IsPK)
-            {
-                decl += "primary key ";
-            }
-            if (p.IsAutoInc)
-            {
-                decl += "autoincrement ";
-            }
-            if (!p.IsNullable)
-            {
-                decl += "not null ";
-            }
-            if (!string.IsNullOrEmpty(p.Collation))
-            {
-                decl += "collate " + p.Collation + " ";
-            }
-
-            return decl;
+            return String.Format("\"{0}\" {1} {2} {3} {4} ",
+                p.Name,
+                SqlType(p, storeDateTimeAsTicks),
+                p.IsAutoInc ? "autoincrement" : null,
+                !p.IsNullable ? "not null" : null,
+                !String.IsNullOrEmpty(p.Collation) ? "collate " + p.Collation : null
+            );
         }
 
         public static string SqlType(TableMapping.Column p, bool storeDateTimeAsTicks)
