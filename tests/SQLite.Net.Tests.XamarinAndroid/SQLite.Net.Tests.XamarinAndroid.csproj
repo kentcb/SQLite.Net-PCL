@@ -51,6 +51,9 @@
     <Compile Include="..\AsyncTests.cs">
       <Link>Tests\AsyncTests.cs</Link>
     </Compile>
+    <Compile Include="..\BlobSerializationTest.cs">
+      <Link>Tests\BlobSerializationTest.cs</Link>
+    </Compile>
     <Compile Include="..\BooleanTest.cs">
       <Link>Tests\BooleanTest.cs</Link>
     </Compile>
@@ -140,6 +143,9 @@
     </Compile>
     <Compile Include="..\UniqueTest.cs">
       <Link>Tests\UniqueTest.cs</Link>
+    </Compile>
+    <Compile Include="..\SerializableTest.cs">
+      <Link>Tests\SerializableTest.cs</Link>
     </Compile>
     <Compile Include="MainActivity.cs" />
     <Compile Include="TestsSample.cs" />
