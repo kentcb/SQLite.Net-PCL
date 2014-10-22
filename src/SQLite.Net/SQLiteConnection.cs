@@ -307,7 +307,7 @@ namespace SQLite.Net
             var sbQuery = new StringBuilder("create table if not exists \"").Append(map.TableName).Append("\"( \n");
             map.Columns.Aggregate(sbQuery, (sb, column) => sb.Append(Orm.SqlDecl(column, StoreDateTimeAsTicks, this.Serializer)).Append(",\n"));
 
-            var pks = (from c in map.Columns where c.IsPK select c).ToList();
+            var pks = (from c in map.Columns where c.IsPK && !c.IsAutoInc select c).ToList();
             if (pks.Count != 0)
             {
                 //, PRIMARY KEY (A_ID, B_ID)

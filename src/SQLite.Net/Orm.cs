@@ -37,13 +37,15 @@ namespace SQLite.Net
 
         public static string SqlDecl(TableMapping.Column p, bool storeDateTimeAsTicks, IBlobSerializer serializer)
         {
-            return String.Format("\"{0}\" {1} {2} {3} {4} ",
+            var result = String.Format("\"{0}\" {1} {2} {3} {4} ",
                 p.Name,
                 SqlType(p, storeDateTimeAsTicks, serializer),
-                p.IsAutoInc ? "autoincrement" : null,
+                p.IsAutoInc ? "primary key autoincrement" : null,
                 !p.IsNullable ? "not null" : null,
                 !String.IsNullOrEmpty(p.Collation) ? "collate " + p.Collation : null
             );
+
+            return result;
         }
 
         public static string SqlType(TableMapping.Column p, bool storeDateTimeAsTicks, IBlobSerializer serializer)
