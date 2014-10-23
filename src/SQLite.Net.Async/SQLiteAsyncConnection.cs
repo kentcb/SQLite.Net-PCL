@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using SQLite.Net.Interop;
 
 namespace SQLite.Net.Async
 {
@@ -50,6 +51,16 @@ namespace SQLite.Net.Async
         protected SQLiteConnectionWithLock GetConnection()
         {
             return _sqliteConnectionFunc();
+        }
+
+        public TableMapping GetMapping<T>()
+        {
+            return this.GetConnection().GetMapping<T>();
+        }
+
+        public TableMapping GetMapping(Type type, CreateFlags createFlags = CreateFlags.None)
+        {
+            return this.GetConnection().GetMapping(type, createFlags);
         }
 
         public Task<CreateTablesResult> CreateTableAsync<T>(CancellationToken cancellationToken = default (CancellationToken))
