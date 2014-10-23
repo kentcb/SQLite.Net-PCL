@@ -103,6 +103,7 @@
     <Compile Include="TraceListenerExtensions.cs" />
     <Compile Include="DebugTraceListener.cs" />
     <Compile Include="ISerializable.cs" />
+    <Compile Include="sqlstring.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
